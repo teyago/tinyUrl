@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 @RestController
+@RequestMapping("/tinyurl")
 public class RedirectController {
     private final UrlService urlService;
 
@@ -49,13 +50,6 @@ public class RedirectController {
 
         UrlErrorDto errorDto = new UrlErrorDto();
 
-        if (StringUtils.isEmpty(alias)) {
-            errorDto.setError("Invalid url");
-            errorDto.setStatus("400");
-
-            return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
-        }
-
         Url url = urlService.getUrlFromAlias(alias);
 
         if (url == null) {
@@ -75,5 +69,16 @@ public class RedirectController {
 
         response.sendRedirect(url.getUrl());
         return null;
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteAlias(@RequestBody UrlResponseDto response) {
+
+        Url url = urlService.getUrlFromAlias(response.getAlias());
+        urlService.deleteUrl(url);
+
+        response.setInfo("Url " + response.getAlias() + " has been successfully removed");
+
+        return new ResponseEntity<>(response.getInfo(), HttpStatus.OK);
     }
 }
