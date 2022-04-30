@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public class UrlServiceImpl implements UrlService {
@@ -56,6 +57,11 @@ public class UrlServiceImpl implements UrlService {
     @Override
     public Url getUrlFromAlias(String alias) {
         return urlRepository.findByAlias(alias);
+    }
+
+    @Override
+    public List<Url> findAllByExpirationDateBefore(LocalDateTime time) {
+        return urlRepository.findAllByExpirationDateBefore(time);
     }
 
     @Override

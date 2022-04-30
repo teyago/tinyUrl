@@ -5,7 +5,6 @@ import com.goncharov.tinyurl.dto.UrlErrorDto;
 import com.goncharov.tinyurl.dto.UrlResponseDto;
 import com.goncharov.tinyurl.entity.Url;
 import com.goncharov.tinyurl.service.UrlService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/tinyurl")
@@ -35,6 +33,7 @@ public class RedirectController {
             response.setUrl(url.getUrl());
             response.setExpirationDate(url.getExpirationDate());
             response.setAlias(url.getAlias());
+            response.setInfo("Short link " + url.getAlias() + " created successfully");
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
@@ -59,16 +58,8 @@ public class RedirectController {
             return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
         }
 
-        if (url.getExpirationDate().isBefore(LocalDateTime.now())) {
-            urlService.deleteUrl(url);
-            errorDto.setError("Url expired");
-            errorDto.setStatus("200");
-
-            return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
-        }
-
         response.sendRedirect(url.getUrl());
-        return null;
+        return new ResponseEntity<>(HttpStatus.MOVED_PERMANENTLY);
     }
 
     @PostMapping("/delete")
@@ -77,7 +68,7 @@ public class RedirectController {
         Url url = urlService.getUrlFromAlias(response.getAlias());
         urlService.deleteUrl(url);
 
-        response.setInfo("Url " + response.getAlias() + " has been successfully removed");
+        response.setInfo("Url " + response.getAlias() + " successfully removed");
 
         return new ResponseEntity<>(response.getInfo(), HttpStatus.OK);
     }

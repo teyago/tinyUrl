@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 public class UrlResponseDto {
-
     private String url;
     private String alias;
     private String info;
