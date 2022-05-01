@@ -13,5 +13,6 @@ public interface UrlService {
     Url saveUrl(Url url);
     Url getUrlFromAlias(String alias);
     List<Url> findAllByExpirationDateBefore(LocalDateTime localDateTime);
+    void incrementCounter(Url url);
     void deleteUrl(Url url);
 }

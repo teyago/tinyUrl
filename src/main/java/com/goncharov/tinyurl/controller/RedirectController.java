@@ -58,6 +58,7 @@ public class RedirectController {
             return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
         }
 
+        urlService.incrementCounter(url);
         response.sendRedirect(url.getUrl());
         return new ResponseEntity<>(HttpStatus.MOVED_PERMANENTLY);
     }

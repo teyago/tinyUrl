@@ -25,6 +25,9 @@ public class Url {
     @Column(nullable = false)
     private String url;
 
+    @Column(nullable = false)
+    private Integer counter;
+
     private LocalDateTime creationDate;
     private LocalDateTime expirationDate;
 }

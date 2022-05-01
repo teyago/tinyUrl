@@ -6,6 +6,7 @@ import com.goncharov.tinyurl.repository.UrlRepository;
 import com.google.common.hash.Hashing;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -28,6 +29,7 @@ public class UrlServiceImpl implements UrlService {
             url.setCreationDate(LocalDateTime.now());
             url.setUrl(urlDto.getUrl());
             url.setAlias(encodeUrl(urlDto.getUrl()));
+            url.setCounter(0);
             url.setExpirationDate(getExpirationDate(urlDto.getExpirationDate(), url.getCreationDate()));
 
             return saveUrl(url);
@@ -47,6 +49,13 @@ public class UrlServiceImpl implements UrlService {
         return Hashing.murmur3_32_fixed()
                 .hashString(url.concat(time.toString()), StandardCharsets.UTF_8)
                 .toString();
+    }
+
+    @Modifying
+    @Override
+    public void incrementCounter(Url url) {
+        url.setCounter(url.getCounter() + 1);
+        urlRepository.save(url);
     }
 
     @Override
