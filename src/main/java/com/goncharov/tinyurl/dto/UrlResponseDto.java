@@ -13,6 +13,6 @@ public class UrlResponseDto {
     private int counter;
     private String url;
     private String alias;
-    private String info;
+    private LocalDateTime creationDate;
     private LocalDateTime expirationDate;
 }
