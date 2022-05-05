@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UrlResponseDto {
+public class UrlRequestDto {
     private int counter;
     private String url;
     private String alias;

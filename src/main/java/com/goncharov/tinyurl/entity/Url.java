@@ -1,6 +1,7 @@
 package com.goncharov.tinyurl.entity;
 
 import lombok.*;
+import org.checkerframework.common.value.qual.MinLen;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Url {
     @Column(unique = true, nullable = false)
     private String alias;
 
+    @MinLen(4)
     @Column(nullable = false)
     private String url;
 
