@@ -7,7 +7,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UrlDto {
+public class UrlCreateDto {
+
     private String url;
     private String expirationDate;
 }

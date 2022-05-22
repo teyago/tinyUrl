@@ -1,6 +1,7 @@
 package com.goncharov.tinyurl.mapper;
 
-import com.goncharov.tinyurl.dto.UrlRequestDto;
+import com.goncharov.tinyurl.dto.UrlGenerateDto;
+import com.goncharov.tinyurl.dto.UrlInfoDto;
 import com.goncharov.tinyurl.entity.Url;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,6 +11,12 @@ import org.mapstruct.factory.Mappers;
 public interface UrlMapper {
     UrlMapper INSTANCE = Mappers.getMapper(UrlMapper.class);
 
-    @Mapping(source = "alias", target = "alias")
-    UrlRequestDto toDto(Url url);
+    @Mapping(target = "creationDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Mapping(target = "expirationDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    UrlGenerateDto generateDto(Url url);
+
+    @Mapping(target = "creationDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Mapping(target = "expirationDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Mapping(target = "numberOfClicks", source = "counter")
+    UrlInfoDto infoDto(Url url);
 }

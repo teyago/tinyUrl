@@ -1,18 +1,25 @@
 package com.goncharov.tinyurl.service;
 
-import com.goncharov.tinyurl.dto.UrlDto;
+import com.goncharov.tinyurl.dto.UrlCreateDto;
+import com.goncharov.tinyurl.dto.UrlGenerateDto;
 import com.goncharov.tinyurl.entity.Url;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public interface UrlService {
-    Url createUrl(UrlDto urlDto);
-    Url saveUrl(Url url);
     Url getUrlFromAlias(String alias);
-    List<Url> findAllByExpirationDateBefore(LocalDateTime localDateTime);
-    void incrementCounter(Url url);
-    void deleteUrl(Url url);
+
+    Url createUrl(UrlCreateDto urlCreateDto);
+
+    void saveUrl(Url url);
+
+    void sendRedirect(String alias, HttpServletResponse response) throws IOException;
+
+    void deleteUrlByAlias(UrlGenerateDto requestDto);
+
+    void deleteAllByExpirationDateBefore(LocalDateTime localDateTime);
 }

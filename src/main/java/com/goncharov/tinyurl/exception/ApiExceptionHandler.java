@@ -9,13 +9,21 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(ApiRequestException.class)
-    public ResponseEntity<Object> handleException(ApiRequestException e) {
+    @ExceptionHandler(UrlIsNullException.class)
+    public ResponseEntity<String> UrlIsNullException() {
+        String message = "Url must be not null";
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
 
-        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+    @ExceptionHandler(UrlIsToShortException.class)
+    public ResponseEntity<String> UrlIsToShortException() {
+        String message = "Url is to short";
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
 
-        ApiException apiException = new ApiException(e.getMessage(), badRequest);
-
-        return new ResponseEntity<>(apiException, badRequest);
+    @ExceptionHandler(UrlDoesntExistException.class)
+    public ResponseEntity<String> UrlDoesntExist() {
+        String message = "Url is outdated or was never created";
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 }

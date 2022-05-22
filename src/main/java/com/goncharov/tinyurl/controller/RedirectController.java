@@ -1,9 +1,8 @@
 package com.goncharov.tinyurl.controller;
 
-import com.goncharov.tinyurl.dto.UrlDto;
-import com.goncharov.tinyurl.dto.UrlRequestDto;
+import com.goncharov.tinyurl.dto.UrlCreateDto;
+import com.goncharov.tinyurl.dto.UrlGenerateDto;
 import com.goncharov.tinyurl.entity.Url;
-import com.goncharov.tinyurl.exception.ApiRequestException;
 import com.goncharov.tinyurl.mapper.UrlMapper;
 import com.goncharov.tinyurl.service.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,60 +24,37 @@ public class RedirectController {
     }
 
     @PostMapping(value = "/generate")
-    public ResponseEntity<?> generateShortLink(@RequestBody(required = false) UrlDto urlDto) throws ApiRequestException {
-        if (urlDto == null) {
-            throw new ApiRequestException("Url must be not null.");
-        }
+    public ResponseEntity<?> generateShortLink
+            (@RequestBody(required = false) UrlCreateDto urlCreateDto) {
 
-        if (urlDto.getUrl().length() < 4) {
-            throw new ApiRequestException("Oops! Url is to short.");
-        }
+        Url url = urlService.createUrl(urlCreateDto);
 
-        Url url = urlService.createUrl(urlDto);
-
-        return new ResponseEntity<>(UrlMapper.INSTANCE.toDto(url), HttpStatus.OK);
+        return new ResponseEntity<>(UrlMapper.INSTANCE.generateDto(url), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{alias}")
     public ResponseEntity<?> redirectToOriginalUrl
-            (@PathVariable String alias, HttpServletResponse response) throws IOException, ApiRequestException {
-        Url url = urlService.getUrlFromAlias(alias);
+            (@PathVariable String alias, HttpServletResponse response) throws IOException {
 
-        if (url == null) {
-            throw new ApiRequestException("Url is outdated or was never created.");
-        }
-
-        response.sendRedirect(url.getUrl());
-        urlService.incrementCounter(url);
+        urlService.sendRedirect(alias, response);
 
         return new ResponseEntity<>(HttpStatus.MOVED_PERMANENTLY);
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteAlias(@RequestBody(required = false) UrlRequestDto requestDto) throws ApiRequestException {
-        if (requestDto == null) {
-            throw new ApiRequestException("Url must be not null.");
-        }
+    public ResponseEntity<?> deleteAlias
+            (@RequestBody(required = false) UrlGenerateDto requestDto) {
 
-        Url url = urlService.getUrlFromAlias(requestDto.getAlias());
-
-        if (url == null) {
-            throw new ApiRequestException("Url is outdated or was never created.");
-        }
-
-        urlService.deleteUrl(url);
+        urlService.deleteUrlByAlias(requestDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/info/{alias}")
-    public ResponseEntity<?> getInfo(@PathVariable String alias) throws ApiRequestException {
+    @GetMapping("/{alias}/info")
+    public ResponseEntity<?> getInfo(@PathVariable String alias) {
+
         Url url = urlService.getUrlFromAlias(alias);
 
-        if (url == null) {
-            throw new ApiRequestException("Url is outdated or was never created.");
-        }
-
-        return new ResponseEntity<>(UrlMapper.INSTANCE.toDto(url), HttpStatus.OK);
+        return new ResponseEntity<>(UrlMapper.INSTANCE.infoDto(url), HttpStatus.OK);
     }
 }
