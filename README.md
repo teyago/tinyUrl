@@ -1,7 +1,7 @@
 # Tiny Url service
 
 ---
-**How to install:**
+**How to install and run:**
 
 * git clone https://github.com/teyago/tinyUrl
 * go to src\main\resources
@@ -12,8 +12,9 @@
 * mvn spring-boot:run
 
 ---
+**How to use:**
 
-**Postman:**
+**Postman**:
 
 _POST_
 
