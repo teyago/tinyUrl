@@ -41,7 +41,7 @@ public class RedirectController {
         return new ResponseEntity<>(HttpStatus.MOVED_PERMANENTLY);
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteAlias
             (@RequestBody(required = false) UrlGenerateDto requestDto) {
 
